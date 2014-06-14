@@ -1,4 +1,3 @@
-component-random-number
+component-todo-list
 =======================
 
-Generates and broadcasts a random number based on a set of criteria.
