@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Appmaker Test Runner</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../tools/test/runner.css" />
+    <link rel="stylesheet" href="../tools/test/mocha/mocha.css" />
+    <script type="text/javascript" src="../tools/test/syntaxhighlighter/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../tools/test/syntaxhighlighter/scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="../tools/test/syntaxhighlighter/styles/shCoreDefault.css"/>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+    <script src="../../tools/test/runner.js"></script>
+    <script src="../tools/test/mocha/mocha.js"></script>
+    <script src="../tools/test/chai/chai.js"></script>
+    <script src="../tools/test/mocha-htmltest.js"></script>
+
+    <script src="tools/harness-utils.js"></script>
+    <link rel="stylesheet" href="tools/harness-utils.css" />
+  </head>
+  <body>
+    <div id="mocha">
+    <h1>Appmaker component test runner</h1>
+    </div>
+    <div id="codes"></div>
+    <script>
+      mocha.setup({ui: 'tdd', slow: 2000, htmlbase: ''});
+    </script>
+    <script src="test/js/tests.js"></script>
+    <script>
+      mocha.run();
+      addSource("component source", "xml", "component.html");
+      addSource("test source", "xml", "test/html/test.html");
+    </script>
+  </body>
+</html>

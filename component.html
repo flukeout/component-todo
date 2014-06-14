@@ -1,0 +1,112 @@
+<polymer-element name="ceci-todo-list" extends="ceci-element" attributes="collection" collection="">
+  <ceci-definition>
+    {
+      "name": "To-Do List",
+      "thumbnail": "./thumbnail.png",
+      "description": "A list of things to do",
+      "broadcasts": {},
+      "listeners": {},
+      "attributes": {
+        "collection": {
+          "description": "",
+          "label": "Collection",
+          "editable": "text"
+        }
+      }
+    }
+  </ceci-definition>
+  <template>
+    <link rel="stylesheet" href="component.css"></link>
+    <div class="first-run-container">
+      <label>Name: </label>
+      <input type="text">
+      <button on-click="{{addNewCollection}}" >Done</button>
+    </div>
+    <div class="list-container hidden">
+      <table>
+        <tr>
+          <td>completed?</td>
+          <td>description</td>
+        </tr>
+        <template repeat="{{item, itemindex in items}}">
+        <tr>
+          <td><input data-item-index="{{itemindex}}" on-change="{{onCheckboxChange}}" type="checkbox" checked="{{item.completed}}"></td>
+          <td>{{item.description}}</td>
+        </tr>
+        </template>
+      </table>
+      <input on-change="{{newTaskAdded}}" class="new-task-input" type="text" value="">
+      <button on-click="{{newTaskAdded}}">New</button>
+    </div>
+    <shadow></shadow>
+  </template>
+    <script>
+      Polymer("ceci-todo-list", {
+        ready: function() {
+          this.super();
+          this.collections = document.querySelector("ceci-collections");
+          this.items = [];
+          if (this.collection !== "") {
+            //this.async(this.collectionReady);
+          }
+        },
+        collectionReady: function() {
+          var self = this;
+          var collection = this.collections.getSchema(this.collection);
+          var completedField = collection.getField("completed");
+          var descriptionField = collection.getField("description");
+          if (!completedField) {
+            collection.addField("completed", "checkbox");
+          }
+          if (!descriptionField) {
+            collection.addField("description", "text");
+          }
+          this.shadowRoot.querySelector(".list-container").classList.remove("hidden");
+          this.shadowRoot.querySelector(".first-run-container").classList.add("hidden");
+          this.items = [];
+          for (var i = 0; i < collection.data.length; i++) {
+            self.items.push(collection.data[i]);
+          }
+          collection.addEventListener("itemchange", function(e) {
+            var detail = e.detail;
+            if (detail.removed) {
+              self.items.splice(detail.index, 1);
+            }
+            if (detail.added) {
+              self.items.splice(detail.index, 0, detail.added);
+            }
+          });
+        },
+        addNewCollection: function() {
+          this.collection = this.shadowRoot.querySelector(".first-run-container input").value;
+        },
+        newTaskAdded: function() {
+          var collection = this.collections.getSchema(this.collection);
+          var input = this.shadowRoot.querySelector(".new-task-input");
+          collection.addItem({
+            description: input.value
+          });
+          input.value = "";
+          input.focus();
+        },
+        collectionChanged: function() {
+          this.shadowRoot.querySelector(".first-run-container input").value = this.collection;
+          if (this.collection === "") {
+            return;
+          }
+          var collection = this.collections.getSchema(this.collection);
+          if (!collection) {
+            this.collections.addSchema(this.collection);
+          }
+          this.async(this.collectionReady);
+        },
+        onCheckboxChange: function(event, detail, sender) {
+          var collection = this.collections.getSchema(this.collection);
+          var index = parseInt(sender.getAttribute('data-item-index'));
+          var dataItem = collection.data[index];
+          dataItem.completed = sender.checked;
+          collection.updateItem(index, dataItem);
+        }
+      });
+    </script>
+</polymer-element>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ceci Button Test App</title>
+  <link rel="import" href="../appmaker/public/ceci/ceci-app.html">
+  <link rel="import" href="../appmaker/public/ceci/ceci-card.html">
+  <link rel="import" href="../appmaker/public/ceci/ceci-element.html">
+  <link rel="import" href="../appmaker/public/ceci/ceci-element-base.html">
+  <link rel="import" href="../appmaker/public/ceci/ceci-broadcast.html">
+  <link rel="import" href="../appmaker/public/ceci/ceci-listen.html">
+  <link rel="import" href="./component.html">
+  <script src="../appmaker/public/vendor/polymer/polymer.min.js"></script>
+  <script src="tools/dat.gui.min.js"></script>
+  <script src="tools/example.js"></script>
+  <link rel="stylesheet" href="tools/example.css">
+</head>
+<body>
+  <div id="app-container">
+    <ceci-app>
+      <ceci-card>
+        <ceci-counter data-analyze id="ceci-counter"></ceci-counter>
+      </ceci-card>
+    </ceci-app>
+  </div>
+  <div id="description">
+    <h1></h1>
+    <div id="thumbnail">
+      <h3>Thumbnail</h3>
+    </div>
+    <div id="tags">
+      <h3>Tags</h3>
+    </div>
+  </div>
+</body>
+</html>
