@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+:host .hidden {
+  display: none;
+}
+
+:host table {
+  margin-top: 10px;
+  width: 100%;
+  border: 1px solid #c0c0c0;
+  background: #31353C;
+}
+
+:host table td {
+  padding: 3px;
+}
+
+:host table tr {
+  color: #fff;
+}
+
+:host table tr:nth-child(even) {
+  background: #545A66;
+}
+
+:host table tr:nth-child(odd) {
+  background: #737A85;
+}
+
+:host table tr:first-child {
+  color: #212429;
+  background: #fff;
+}
