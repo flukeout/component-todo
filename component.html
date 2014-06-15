@@ -4,8 +4,22 @@
       "name": "To-Do List",
       "thumbnail": "./thumbnail.png",
       "description": "A list of things to do",
-      "broadcasts": {},
-      "listeners": {},
+      "broadcasts": {
+        "itemcompleted": {
+          "label": "An item was completed.",
+          "description": "Sends a message that an item in the list was completed."
+        },
+        "allitemscompleted": {
+          "label": "Todo list was completed.",
+          "description": "Sends a message that the todo list was completed."
+        }
+      },
+      "listeners": {
+        "additem": {
+          "description": "Adds a todo list item.",
+          "label": "Add Item"
+        }
+      },
       "attributes": {
         "collection": {
           "description": "",
@@ -27,16 +41,16 @@
         <tr>
           <td>completed</td>
           <td>description</td>
+          <td></td>
         </tr>
         <template repeat="{{item, itemindex in items}}">
         <tr>
           <td><input data-item-index="{{itemindex}}" on-change="{{onCheckboxChange}}" type="checkbox" checked="{{item.completed}}"></td>
           <td>{{item.description}}</td>
+          <td on-click="{{removeItem}}" data-item-index="{{itemindex}}" class="remove-column">-</td>
         </tr>
         </template>
       </table>
-      <input on-change="{{newTaskAdded}}" class="new-task-input" type="text" value="">
-      <button on-click="{{newTaskAdded}}">New</button>
     </div>
     <shadow></shadow>
   </template>
@@ -46,9 +60,7 @@
           this.super();
           this.collections = document.querySelector("ceci-collections");
           this.items = [];
-          if (this.collection !== "") {
-            //this.async(this.collectionReady);
-          }
+          this.completed = 0;
         },
         collectionReady: function() {
           var self = this;
@@ -64,8 +76,12 @@
           this.shadowRoot.querySelector(".list-container").classList.remove("hidden");
           this.shadowRoot.querySelector(".first-run-container").classList.add("hidden");
           this.items = [];
+          this.completed = 0;
           for (var i = 0; i < collection.data.length; i++) {
-            self.items.push(collection.data[i]);
+            this.items.push(collection.data[i]);
+            if (collection.data[i].completed) {
+              this.completed++;
+            }
           }
           collection.addEventListener("itemchange", function(e) {
             var detail = e.detail;
@@ -80,14 +96,11 @@
         addNewCollection: function() {
           this.collection = this.shadowRoot.querySelector(".first-run-container input").value;
         },
-        newTaskAdded: function() {
+        additem: function(item) {
           var collection = this.collections.getSchema(this.collection);
-          var input = this.shadowRoot.querySelector(".new-task-input");
           collection.addItem({
-            description: input.value
+            description: item
           });
-          input.value = "";
-          input.focus();
         },
         collectionChanged: function() {
           this.shadowRoot.querySelector(".first-run-container input").value = this.collection;
@@ -106,6 +119,22 @@
           var dataItem = collection.data[index];
           dataItem.completed = sender.checked;
           collection.updateItem(index, dataItem);
+          if (sender.checked) {
+            this.completed++;
+            this.broadcast("itemcompleted", dataItem.description);
+            if (this.completed >= this.items.length) {
+              this.broadcast("allitemscompleted", this.completed);
+            }
+          } else {
+            this.completed--;
+          }
+        },
+        removeItem: function(event, detail, sender) {
+          var collection = this.collections.getSchema(this.collection);
+          var index = parseInt(sender.getAttribute('data-item-index'));
+          var dataItem = collection.data[index];
+          collection.removeItem(index);
+          this.completed--;
         }
       });
     </script>

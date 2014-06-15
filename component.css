@@ -8,7 +8,6 @@
 }
 
 :host table {
-  margin-top: 10px;
   width: 100%;
   border: 1px solid #c0c0c0;
   background: #31353C;
@@ -31,6 +30,16 @@
 }
 
 :host table tr:first-child {
+  color: #212429;
+  background: #fff;
+}
+
+:host .remove-column {
+  text-align: center;
+  cursor: pointer;
+}
+
+:host .remove-column:hover {
   color: #212429;
   background: #fff;
 }
