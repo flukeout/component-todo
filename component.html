@@ -64,7 +64,7 @@
         },
         collectionReady: function() {
           var self = this;
-          var collection = this.collections.getSchema(this.collection);
+          var collection = this.collections.getCollection(this.collection);
           var completedField = collection.getField("completed");
           var descriptionField = collection.getField("description");
           if (!completedField) {
@@ -97,7 +97,7 @@
           this.collection = this.shadowRoot.querySelector(".first-run-container input").value;
         },
         additem: function(item) {
-          var collection = this.collections.getSchema(this.collection);
+          var collection = this.collections.getCollection(this.collection);
           collection.addItem({
             description: item
           });
@@ -107,14 +107,14 @@
           if (this.collection === "") {
             return;
           }
-          var collection = this.collections.getSchema(this.collection);
+          var collection = this.collections.getCollection(this.collection);
           if (!collection) {
-            this.collections.addSchema(this.collection);
+            this.collections.addCollection(this.collection);
           }
           this.async(this.collectionReady);
         },
         onCheckboxChange: function(event, detail, sender) {
-          var collection = this.collections.getSchema(this.collection);
+          var collection = this.collections.getCollection(this.collection);
           var index = parseInt(sender.getAttribute('data-item-index'));
           var dataItem = collection.data[index];
           dataItem.completed = sender.checked;
@@ -130,7 +130,7 @@
           }
         },
         removeItem: function(event, detail, sender) {
-          var collection = this.collections.getSchema(this.collection);
+          var collection = this.collections.getCollection(this.collection);
           var index = parseInt(sender.getAttribute('data-item-index'));
           var dataItem = collection.data[index];
           collection.removeItem(index);
