@@ -39,6 +39,9 @@
       <button on-click="{{addNewCollection}}" >Done</button>
     </div>
     <div class="list-container hidden">
+      <template if="{{ items.length == 0 }}">
+      <p class="no-items">0 To-do Items</p>
+      </template>
       <template repeat="{{item, itemindex in items}}">
         <div class="item {{item.completed}}">
           <a on-click="{{removeItem}}" data-item-index="{{itemindex}}" class="remove-item">Clear</a>
