@@ -17,7 +17,8 @@
       "listeners": {
         "additem": {
           "description": "Adds a todo list item.",
-          "label": "Add Item"
+          "label": "Add Item",
+          "default" : true
         }
       },
       "attributes": {
@@ -32,25 +33,21 @@
   <template>
     <link rel="stylesheet" href="component.css"></link>
     <div class="first-run-container">
-      <label>Name: </label>
-      <input type="text">
+      <h3>Choose or Create a Collection</h3>
+      <p>This Brick will store your items in a Collection with this name.</p>
+      <input placeholder="Ex. 'todos'" value="todos" type="text" />
       <button on-click="{{addNewCollection}}" >Done</button>
     </div>
     <div class="list-container hidden">
-      <table>
-        <tr>
-          <td>completed</td>
-          <td>description</td>
-          <td></td>
-        </tr>
-        <template repeat="{{item, itemindex in items}}">
-        <tr>
-          <td><input data-item-index="{{itemindex}}" on-change="{{onCheckboxChange}}" type="checkbox" checked="{{item.completed}}"></td>
-          <td>{{item.description}}</td>
-          <td on-click="{{removeItem}}" data-item-index="{{itemindex}}" class="remove-column">-</td>
-        </tr>
-        </template>
-      </table>
+      <template repeat="{{item, itemindex in items}}">
+        <div class="item {{item.completed}}">
+          <a on-click="{{removeItem}}" data-item-index="{{itemindex}}" class="remove-item">Clear</a>
+          <label>
+            <input data-item-index="{{itemindex}}" on-change="{{onCheckboxChange}}" type="checkbox" checked="{{item.completed}}" />
+            {{item.description}}
+          </label>
+        </div>
+      </template>
     </div>
     <shadow></shadow>
   </template>
@@ -83,6 +80,7 @@
               this.completed++;
             }
           }
+
           collection.addEventListener("itemchange", function(e) {
             var detail = e.detail;
             if (detail.removed) {
@@ -97,12 +95,15 @@
           this.collection = this.shadowRoot.querySelector(".first-run-container input").value;
         },
         additem: function(item) {
-          var collection = this.collections.getCollection(this.collection);
-          collection.addItem({
-            description: item
-          });
+          if(item){
+            var collection = this.collections.getCollection(this.collection);
+            collection.addItem({
+              description: item
+            });
+          }
         },
         collectionChanged: function() {
+          var that = this;
           this.shadowRoot.querySelector(".first-run-container input").value = this.collection;
           if (this.collection === "") {
             return;
@@ -111,6 +112,7 @@
           if (!collection) {
             this.collections.addCollection(this.collection);
           }
+
           this.async(this.collectionReady);
         },
         onCheckboxChange: function(event, detail, sender) {
