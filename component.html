@@ -6,11 +6,11 @@
       "description": "A list of things to do",
       "broadcasts": {
         "itemcompleted": {
-          "label": "An item was completed.",
+          "label": "Item done",
           "description": "Sends a message that an item in the list was completed."
         },
         "allitemscompleted": {
-          "label": "Todo list was completed.",
+          "label": "All items done",
           "description": "Sends a message that the todo list was completed."
         }
       },
@@ -106,7 +106,6 @@
           }
         },
         collectionChanged: function() {
-          var that = this;
           this.shadowRoot.querySelector(".first-run-container input").value = this.collection;
           if (this.collection === "") {
             return;
@@ -115,7 +114,6 @@
           if (!collection) {
             this.collections.addCollection(this.collection);
           }
-
           this.async(this.collectionReady);
         },
         onCheckboxChange: function(event, detail, sender) {
